@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uganda Land Management System - Documentation</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <div class="container" style="max-width: 800px; margin: 2rem auto; padding: 2rem;">
+        <div class="card">
+            <div class="card-header">
+                <h1 style="color: var(--primary); margin-bottom: 0.5rem;">Uganda Land Management System</h1>
+                <p style="color: var(--muted-foreground);">Comprehensive land tenure and dispute tracking system</p>
+            </div>
+            
+            <div style="padding: 2rem;">
+                <h2>System Overview</h2>
+                <p>The Uganda Land Management System is a comprehensive web application designed to track land tenure, disputes, and land grabbing incidents across Uganda. The system serves multiple user types with specialized dashboards and functionality.</p>
+                
+                <h3>User Types & Access</h3>
+                <div style="margin: 1rem 0;">
+                    <div class="card" style="margin-bottom: 1rem; padding: 1rem;">
+                        <h4 style="color: var(--primary); margin-bottom: 0.5rem;">Citizens</h4>
+                        <p>Land owners and users who can report disputes, track their land parcels, and access legal aid resources.</p>
+                        <strong>Login:</strong> Any username/password with user type "Citizen"
+                    </div>
+                    
+                    <div class="card" style="margin-bottom: 1rem; padding: 1rem;">
+                        <h4 style="color: var(--primary); margin-bottom: 0.5rem;">Government Officials</h4>
+                        <p>Government workers who manage land records, process disputes, and oversee CCO applications.</p>
+                        <strong>Login:</strong> Any username/password with user type "Government Official"
+                    </div>
+                    
+                    <div class="card" style="margin-bottom: 1rem; padding: 1rem;">
+                        <h4 style="color: var(--primary); margin-bottom: 0.5rem;">Legal Aid Providers</h4>
+                        <p>Legal professionals who assist citizens with land-related legal issues and case management.</p>
+                        <strong>Login:</strong> Any username/password with user type "Legal Aid Provider"
+                    </div>
+                    
+                    <div class="card" style="margin-bottom: 1rem; padding: 1rem;">
+                        <h4 style="color: var(--primary); margin-bottom: 0.5rem;">Researchers</h4>
+                        <p>Academic and policy researchers who analyze land data and generate insights.</p>
+                        <strong>Login:</strong> Any username/password with user type "Researcher"
+                    </div>
+                    
+                    <div class="card" style="margin-bottom: 1rem; padding: 1rem;">
+                        <h4 style="color: var(--primary); margin-bottom: 0.5rem;">Administrators</h4>
+                        <p>System administrators who manage users, monitor system health, and maintain data integrity.</p>
+                        <strong>Login:</strong> Any username/password with user type "Administrator"
+                    </div>
+                </div>
+                
+                <h3>Key Features</h3>
+                <ul style="margin: 1rem 0; padding-left: 2rem;">
+                    <li><strong>Land Dispute Tracking:</strong> Comprehensive dispute management and resolution tracking</li>
+                    <li><strong>Land Grabbing Monitoring:</strong> Specialized tracking for land grabbing incidents</li>
+                    <li><strong>Tenure System Management:</strong> Support for all four Uganda land tenure types</li>
+                    <li><strong>Certificate of Customary Ownership (CCO):</strong> Application and processing workflow</li>
+                    <li><strong>Legal Aid Integration:</strong> Case management and referral network</li>
+                    <li><strong>Research Analytics:</strong> Data analysis tools and visualization</li>
+                    <li><strong>User Management:</strong> Role-based access control and user administration</li>
+                    <li><strong>System Monitoring:</strong> Performance tracking and security auditing</li>
+                </ul>
+                
+                <h3>Technology Stack</h3>
+                <ul style="margin: 1rem 0; padding-left: 2rem;">
+                    <li><strong>Frontend:</strong> HTML5, CSS3, Vanilla JavaScript</li>
+                    <li><strong>Styling:</strong> Custom CSS with design tokens</li>
+                    <li><strong>Charts:</strong> Chart.js for data visualization</li>
+                    <li><strong>Storage:</strong> LocalStorage for demo authentication</li>
+                    <li><strong>Database Schema:</strong> MySQL-compatible SQL schema included</li>
+                </ul>
+                
+                <h3>File Structure</h3>
+                <div style="background-color: var(--muted); padding: 1rem; border-radius: var(--radius); font-family: monospace; margin: 1rem 0;">
+uganda-land-system/<br>
+├── index.html (Login page)<br>
+├── logout.html (Logout page)<br>
+├── styles/<br>
+│   └── main.css (Main stylesheet)<br>
+├── js/<br>
+│   ├── auth.js (Authentication management)<br>
+│   ├── navigation.js (Navigation utilities)<br>
+│   └── utils.js (Utility functions)<br>
+└── dashboards/<br>
+    ├── citizen.html<br>
+    ├── government_official.html<br>
+    ├── legal_aid.html<br>
+    ├── researcher.html<br>
+    └── admin.html
+                </div>
+                
+                <h3>Getting Started</h3>
+                <ol style="margin: 1rem 0; padding-left: 2rem;">
+                    <li>Open <code>index.html</code> in a web browser</li>
+                    <li>Enter any username and password</li>
+                    <li>Select a user type from the dropdown</li>
+                    <li>Click "Sign In" to access the appropriate dashboard</li>
+                    <li>Explore the features available for your selected user type</li>
+                </ol>
+                
+                <h3>Database Integration</h3>
+                <p>The system includes a comprehensive MySQL database schema (<code>uganda_land_db.sql</code>) that supports:</p>
+                <ul style="margin: 1rem 0; padding-left: 2rem;">
+                    <li>User management and authentication</li>
+                    <li>Land parcel and ownership records</li>
+                    <li>Dispute and case tracking</li>
+                    <li>Land grabbing incident monitoring</li>
+                    <li>Legal aid case management</li>
+                    <li>Research data and analytics</li>
+                    <li>System audit and security logs</li>
+                </ul>
+                
+                <h3>Security Features</h3>
+                <ul style="margin: 1rem 0; padding-left: 2rem;">
+                    <li>Role-based access control</li>
+                    <li>Session management</li>
+                    <li>Audit logging</li>
+                    <li>Data validation and sanitization</li>
+                    <li>Secure authentication workflows</li>
+                </ul>
+                
+                <div style="margin-top: 2rem; padding: 1rem; background-color: var(--card); border-radius: var(--radius);">
+                    <h4 style="color: var(--primary);">Demo Note</h4>
+                    <p style="margin: 0;">This is a demonstration system. In a production environment, you would need to:</p>
+                    <ul style="margin: 0.5rem 0; padding-left: 2rem;">
+                        <li>Implement proper backend authentication</li>
+                        <li>Connect to a real database</li>
+                        <li>Add server-side validation and security</li>
+                        <li>Implement proper session management</li>
+                        <li>Add SSL/TLS encryption</li>
+                    </ul>
+                </div>
+                
+                <div style="text-align: center; margin-top: 2rem;">
+                    <a href="index.html" class="btn btn-primary">Go to Login Page</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Researcher Dashboard - Uganda Land Management System</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2 style="color: var(--primary); font-family: 'Montserrat', sans-serif; font-weight: 900;">Land Management</h2>
+            <p style="font-size: 0.875rem; color: var(--muted-foreground);" id="user-info">Loading...</p>
+        </div>
+        
+        <ul class="sidebar-nav">
+            <li><a href="researcher.html">Dashboard</a></li>
+            <li><a href="#" onclick="showSection('data-analysis')">Data Analysis</a></li>
+            <li><a href="#" onclick="showSection('statistics')">Land Statistics</a></li>
+            <li><a href="#" onclick="showSection('case-studies')">Case Studies</a></li>
+            <li><a href="#" onclick="showSection('research-tools')">Research Tools</a></li>
+            <li><a href="#" onclick="showSection('publications')">Publications</a></li>
+            <li><a href="#" onclick="showSection('data-export')">Data Export</a></li>
+            <li><a href="#" onclick="logout()" style="color: var(--destructive);">Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Dashboard Overview Section -->
+        <div id="dashboard-section">
+            <div class="flex justify-between items-center mb-4">
+                <h1>Research Dashboard</h1>
+                <div class="flex gap-4">
+                    <button class="btn btn-primary" onclick="showSection('data-analysis')">Analyze Data</button>
+                    <button class="btn btn-secondary" onclick="showSection('data-export')">Export Dataset</button>
+                </div>
+            </div>
+
+            <!-- Key Research Metrics -->
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="total-disputes-count">1,247</div>
+                    <div class="stat-label">Total Land Disputes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="land-grabbing-incidents">156</div>
+                    <div class="stat-label">Land Grabbing Incidents</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="displaced-persons">360,000</div>
+                    <div class="stat-label">Displaced Persons (2024)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="customary-land-percentage">75%</div>
+                    <div class="stat-label">Customary Land Coverage</div>
+                </div>
+            </div>
+
+            <!-- Research Insights -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Land Tenure Distribution</h3>
+                    </div>
+                    <canvas id="tenureChart" width="400" height="200"></canvas>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Dispute Trends (2024)</h3>
+                    </div>
+                    <canvas id="disputeTrendsChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+
+            <!-- Recent Research Activity -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Recent Research Activity</h3>
+                </div>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Activity</th>
+                                <th>Dataset</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2024-01-15</td>
+                                <td>Land grabbing analysis - Central Region</td>
+                                <td>Dispute Records 2023-2024</td>
+                                <td><span class="badge badge-success">Completed</span></td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;">View Results</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2024-01-12</td>
+                                <td>Customary land tenure study</td>
+                                <td>Land Ownership Records</td>
+                                <td><span class="badge badge-warning">In Progress</span></td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;">Continue Analysis</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2024-01-10</td>
+                                <td>Gender impact assessment</td>
+                                <td>User Demographics</td>
+                                <td><span class="badge badge-info">Published</span></td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;">View Publication</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Analysis Section -->
+        <div id="data-analysis-section" class="hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h1>Data Analysis Tools</h1>
+                <button class="btn btn-primary" onclick="createNewAnalysis()">New Analysis</button>
+            </div>
+
+            <!-- Analysis Filters -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Analysis Parameters</h3>
+                </div>
+                
+                <form id="analysisForm">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label for="analysisType" class="form-label">Analysis Type</label>
+                            <select id="analysisType" name="analysisType" class="form-select">
+                                <option value="dispute_trends">Dispute Trends</option>
+                                <option value="tenure_analysis">Tenure Analysis</option>
+                                <option value="regional_comparison">Regional Comparison</option>
+                                <option value="gender_impact">Gender Impact</option>
+                                <option value="economic_impact">Economic Impact</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="timeframe" class="form-label">Time Frame</label>
+                            <select id="timeframe" name="timeframe" class="form-select">
+                                <option value="last_month">Last Month</option>
+                                <option value="last_quarter">Last Quarter</option>
+                                <option value="last_year">Last Year</option>
+                                <option value="all_time">All Time</option>
+                                <option value="custom">Custom Range</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="region" class="form-label">Region</label>
+                            <select id="region" name="region" class="form-select">
+                                <option value="all">All Regions</option>
+                                <option value="central">Central</option>
+                                <option value="northern">Northern</option>
+                                <option value="eastern">Eastern</option>
+                                <option value="western">Western</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-4 mt-4">
+                        <button type="submit" class="btn btn-primary">Run Analysis</button>
+                        <button type="button" class="btn btn-secondary" onclick="saveAnalysis()">Save Parameters</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Analysis Results -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Analysis Results</h3>
+                </div>
+                <div id="analysis-results">
+                    <div style="text-align: center; padding: 3rem; color: var(--muted-foreground);">
+                        <p>Run an analysis to see results here</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Section -->
+        <div id="statistics-section" class="hidden">
+            <h1>Comprehensive Land Statistics</h1>
+            
+            <!-- Key Statistics Grid -->
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <div class="stat-number">15,247</div>
+                    <div class="stat-label">Total Land Parcels</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">70%</div>
+                    <div class="stat-label">Unregistered Land</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">23%</div>
+                    <div class="stat-label">Households Affected by Disputes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">$2.4B</div>
+                    <div class="stat-label">Estimated Economic Impact</div>
+                </div>
+            </div>
+
+            <!-- Detailed Statistics -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Disputes by Type</h3>
+                    </div>
+                    <div style="padding: 1rem;">
+                        <div style="margin-bottom: 1rem;">
+                            <div class="flex justify-between items-center">
+                                <span>Land Grabbing</span>
+                                <span><strong>35%</strong></span>
+                            </div>
+                            <div style="background-color: var(--muted); height: 8px; border-radius: 4px; margin-top: 4px;">
+                                <div style="background-color: var(--destructive); height: 100%; width: 35%; border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <div class="flex justify-between items-center">
+                                <span>Boundary Disputes</span>
+                                <span><strong>28%</strong></span>
+                            </div>
+                            <div style="background-color: var(--muted); height: 8px; border-radius: 4px; margin-top: 4px;">
+                                <div style="background-color: var(--primary); height: 100%; width: 28%; border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <div class="flex justify-between items-center">
+                                <span>Family Wrangles</span>
+                                <span><strong>22%</strong></span>
+                            </div>
+                            <div style="background-color: var(--muted); height: 8px; border-radius: 4px; margin-top: 4px;">
+                                <div style="background-color: var(--secondary); height: 100%; width: 22%; border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center">
+                                <span>Other</span>
+                                <span><strong>15%</strong></span>
+                            </div>
+                            <div style="background-color: var(--muted); height: 8px; border-radius: 4px; margin-top: 4px;">
+                                <div style="background-color: var(--chart-3); height: 100%; width: 15%; border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Regional Distribution</h3>
+                    </div>
+                    <div style="padding: 1rem;">
+                        <div style="margin-bottom: 1rem;">
+                            <div class="flex justify-between items-center">
+                                <span>Central Region</span>
+                                <span><strong>45%</strong></span>
+                            </div>
+                            <div style="background-color: var(--muted); height: 8px; border-radius: 4px; margin-top: 4px;">
+                                <div style="background-color: var(--primary); height: 100%; width: 45%; border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <div class="flex justify-between items-center">
+                                <span>Northern Region</span>
+                                <span><strong>28%</strong></span>
+                            </div>
+                            <div style="background-color: var(--muted); height: 8px; border-radius: 4px; margin-top: 4px;">
+                                <div style="background-color: var(--secondary); height: 100%; width: 28%; border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <div class="flex justify-between items-center">
+                                <span>Eastern Region</span>
+                                <span><strong>18%</strong></span>
+                            </div>
+                            <div style="background-color: var(--muted); height: 8px; border-radius: 4px; margin-top: 4px;">
+                                <div style="background-color: var(--chart-3); height: 100%; width: 18%; border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center">
+                                <span>Western Region</span>
+                                <span><strong>9%</strong></span>
+                            </div>
+                            <div style="background-color: var(--muted); height: 8px; border-radius: 4px; margin-top: 4px;">
+                                <div style="background-color: var(--chart-4); height: 100%; width: 9%; border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Case Studies Section -->
+        <div id="case-studies-section" class="hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h1>Research Case Studies</h1>
+                <button class="btn btn-primary" onclick="createCaseStudy()">Create New Case Study</button>
+            </div>
+
+            <div class="card">
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Type</th>
+                                <th>Location</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Impact</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Massive Land Grabbing in Apac District</td>
+                                <td>Land Grabbing</td>
+                                <td>Apac District, Northern Uganda</td>
+                                <td>2023-08-15</td>
+                                <td><span class="badge badge-info">Published</span></td>
+                                <td>High</td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="viewCaseStudy('CS-001')">View Study</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Successful Community Land Mediation</td>
+                                <td>Successful Mediation</td>
+                                <td>Wakiso District, Central Uganda</td>
+                                <td>2023-11-20</td>
+                                <td><span class="badge badge-success">Featured</span></td>
+                                <td>Medium</td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="viewCaseStudy('CS-002')">View Study</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Impact of CCO Implementation</td>
+                                <td>Policy Analysis</td>
+                                <td>Multiple Districts</td>
+                                <td>2024-01-10</td>
+                                <td><span class="badge badge-warning">Draft</span></td>
+                                <td>High</td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="editCaseStudy('CS-003')">Edit Draft</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Research Tools Section -->
+        <div id="research-tools-section" class="hidden">
+            <h1>Research Tools & Methodologies</h1>
+            
+            <div class="dashboard-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Data Collection Tools</h3>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 1rem; padding: 1rem;">
+                        <button class="btn btn-secondary" onclick="launchSurvey()">Launch Field Survey</button>
+                        <button class="btn btn-secondary" onclick="createQuestionnaire()">Create Questionnaire</button>
+                        <button class="btn btn-secondary" onclick="scheduleInterview()">Schedule Interviews</button>
+                        <button class="btn btn-secondary" onclick="mapData()">Geographic Mapping</button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Analysis Methods</h3>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 1rem; padding: 1rem;">
+                        <button class="btn btn-secondary" onclick="statisticalAnalysis()">Statistical Analysis</button>
+                        <button class="btn btn-secondary" onclick="trendAnalysis()">Trend Analysis</button>
+                        <button class="btn btn-secondary" onclick="correlationAnalysis()">Correlation Analysis</button>
+                        <button class="btn btn-secondary" onclick="predictiveModeling()">Predictive Modeling</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Research Collaboration</h3>
+                </div>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Institution</th>
+                                <th>Collaboration Type</th>
+                                <th>Current Projects</th>
+                                <th>Contact Person</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Makerere University</td>
+                                <td>Academic Partnership</td>
+                                <td>Land Tenure Research</td>
+                                <td>Prof. Sarah Nakato</td>
+                                <td><span class="badge badge-success">Active</span></td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;">Contact</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>World Bank</td>
+                                <td>Funding Partner</td>
+                                <td>Land Rights Assessment</td>
+                                <td>Dr. James Wilson</td>
+                                <td><span class="badge badge-info">Ongoing</span></td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;">View Project</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Publications Section -->
+        <div id="publications-section" class="hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h1>Research Publications</h1>
+                <button class="btn btn-primary" onclick="submitPublication()">Submit New Publication</button>
+            </div>
+
+            <div class="card">
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Authors</th>
+                                <th>Publication Date</th>
+                                <th>Journal/Conference</th>
+                                <th>Status</th>
+                                <th>Citations</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Land Grabbing Patterns in Post-Conflict Uganda</td>
+                                <td>Dr. Mary Namuli, Prof. John Okello</td>
+                                <td>2023-12-15</td>
+                                <td>Journal of African Land Studies</td>
+                                <td><span class="badge badge-success">Published</span></td>
+                                <td>23</td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;">View PDF</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Effectiveness of Customary Land Certificates</td>
+                                <td>Dr. Sarah Nakato, James Kato</td>
+                                <td>2024-01-10</td>
+                                <td>Land Policy Conference 2024</td>
+                                <td><span class="badge badge-info">Accepted</span></td>
+                                <td>-</td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;">Edit Draft</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Gender Dimensions of Land Disputes</td>
+                                <td>Dr. Mary Namuli</td>
+                                <td>-</td>
+                                <td>Under Review</td>
+                                <td><span class="badge badge-warning">Under Review</span></td>
+                                <td>-</td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;">Track Status</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Export Section -->
+        <div id="data-export-section" class="hidden">
+            <h1>Data Export & API Access</h1>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Export Dataset</h3>
+                </div>
+                
+                <form id="exportForm">
+                    <div class="form-group">
+                        <label for="datasetType" class="form-label">Dataset Type</label>
+                        <select id="datasetType" name="datasetType" class="form-select" required>
+                            <option value="">Select Dataset</option>
+                            <option value="land_disputes">Land Disputes</option>
+                            <option value="land_parcels">Land Parcels</option>
+                            <option value="ownership_records">Ownership Records</option>
+                            <option value="grabbing_incidents">Land Grabbing Incidents</option>
+                            <option value="user_demographics">User Demographics</option>
+                            <option value="case_studies">Case Studies</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="exportFormat" class="form-label">Export Format</label>
+                        <select id="exportFormat" name="exportFormat" class="form-select" required>
+                            <option value="csv">CSV</option>
+                            <option value="json">JSON</option>
+                            <option value="xlsx">Excel (XLSX)</option>
+                            <option value="xml">XML</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="dateRange" class="form-label">Date Range</label>
+                        <div class="flex gap-4">
+                            <input type="date" id="startDate" name="startDate" class="form-input">
+                            <input type="date" id="endDate" name="endDate" class="form-input">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="filters" class="form-label">Additional Filters</label>
+                        <textarea id="filters" name="filters" class="form-input" rows="3" 
+                                  placeholder="Enter any additional filters or conditions..."></textarea>
+                    </div>
+                    
+                    <div class="flex gap-4">
+                        <button type="submit" class="btn btn-primary">Export Data</button>
+                        <button type="button" class="btn btn-secondary" onclick="previewData()">Preview Data</button>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">API Access</h3>
+                </div>
+                <div style="padding: 1rem;">
+                    <p style="margin-bottom: 1rem;">Access real-time data through our REST API endpoints:</p>
+                    <div style="background-color: var(--muted); padding: 1rem; border-radius: var(--radius); font-family: monospace; margin-bottom: 1rem;">
+                        <div>GET /api/disputes - Land disputes data</div>
+                        <div>GET /api/statistics - Aggregated statistics</div>
+                        <div>GET /api/parcels - Land parcel information</div>
+                        <div>GET /api/case-studies - Research case studies</div>
+                    </div>
+                    <button class="btn btn-secondary" onclick="generateAPIKey()">Generate API Key</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/auth.js"></script>
+    <script>
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeDashboard();
+            showSection('dashboard');
+            initializeCharts();
+        });
+
+        // Section navigation
+        function showSection(sectionName) {
+            const sections = document.querySelectorAll('[id$="-section"]');
+            sections.forEach(section => section.classList.add('hidden'));
+            
+            const targetSection = document.getElementById(sectionName + '-section');
+            if (targetSection) {
+                targetSection.classList.remove('hidden');
+            }
+            
+            const navLinks = document.querySelectorAll('.sidebar-nav a');
+            navLinks.forEach(link => link.classList.remove('active'));
+            
+            const activeLink = document.querySelector(`[onclick="showSection('${sectionName}')"]`);
+            if (activeLink) {
+                activeLink.classList.add('active');
+            }
+        }
+
+        // Initialize charts
+        function initializeCharts() {
+            // Tenure Distribution Chart
+            const tenureCtx = document.getElementById('tenureChart').getContext('2d');
+            new Chart(tenureCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Customary', 'Mailo', 'Freehold', 'Leasehold'],
+                    datasets: [{
+                        data: [75, 15, 8, 2],
+                        backgroundColor: ['#059669', '#10b981', '#475569', '#dc2626']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+
+            // Dispute Trends Chart
+            const trendsCtx = document.getElementById('disputeTrendsChart').getContext('2d');
+            new Chart(trendsCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Land Disputes',
+                        data: [45, 52, 48, 61, 55, 67],
+                        borderColor: '#059669',
+                        backgroundColor: 'rgba(5, 150, 105, 0.1)',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // Analysis form handler
+        document.getElementById('analysisForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const analysisParams = {
+                type: formData.get('analysisType'),
+                timeframe: formData.get('timeframe'),
+                region: formData.get('region'),
+                runBy: auth.getCurrentUser().username,
+                runAt: new Date().toISOString()
+            };
+            
+            console.log('Running analysis:', analysisParams);
+            
+            // Simulate analysis results
+            const resultsDiv = document.getElementById('analysis-results');
+            resultsDiv.innerHTML = `
+                <div style="padding: 1rem;">
+                    <h4>Analysis Results: ${analysisParams.type}</h4>
+                    <p>Analysis completed for ${analysisParams.region} region, ${analysisParams.timeframe} timeframe.</p>
+                    <div style="margin-top: 1rem;">
+                        <strong>Key Findings:</strong>
+                        <ul style="margin-top: 0.5rem;">
+                            <li>Land disputes increased by 15% in the selected period</li>
+                            <li>Boundary disputes are the most common type (35%)</li>
+                            <li>Resolution rate improved to 68%</li>
+                        </ul>
+                    </div>
+                    <button class="btn btn-primary" onclick="exportAnalysis()" style="margin-top: 1rem;">Export Results</button>
+                </div>
+            `;
+        });
+
+        // Export form handler
+        document.getElementById('exportForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const exportParams = {
+                dataset: formData.get('datasetType'),
+                format: formData.get('exportFormat'),
+                startDate: formData.get('startDate'),
+                endDate: formData.get('endDate'),
+                filters: formData.get('filters'),
+                exportedBy: auth.getCurrentUser().username,
+                exportedAt: new Date().toISOString()
+            };
+            
+            console.log('Exporting data:', exportParams);
+            alert(`Exporting ${exportParams.dataset} data in ${exportParams.format} format. You will receive a download link shortly.`);
+        });
+
+        // Research tool functions
+        function createNewAnalysis() {
+            showSection('data-analysis');
+        }
+
+        function saveAnalysis() {
+            alert('Analysis parameters saved successfully!');
+        }
+
+        function createCaseStudy() {
+            alert('Opening case study creation form...');
+        }
+
+        function viewCaseStudy(id) {
+            alert(`Opening case study ${id}...`);
+        }
+
+        function editCaseStudy(id) {
+            alert(`Editing case study ${id}...`);
+        }
+
+        function submitPublication() {
+            alert('Opening publication submission form...');
+        }
+
+        function previewData() {
+            alert('Opening data preview...');
+        }
+
+        function generateAPIKey() {
+            const apiKey = 'uls_' + Math.random().toString(36).substr(2, 16);
+            alert(`Your API Key: ${apiKey}\n\nPlease save this key securely. It will not be shown again.`);
+        }
+
+        function exportAnalysis() {
+            alert('Exporting analysis results...');
+        }
+
+        // Research tool functions
+        function launchSurvey() { alert('Launching field survey tool...'); }
+        function createQuestionnaire() { alert('Opening questionnaire builder...'); }
+        function scheduleInterview() { alert('Opening interview scheduler...'); }
+        function mapData() { alert('Opening geographic mapping tool...'); }
+        function statisticalAnalysis() { alert('Opening statistical analysis tool...'); }
+        function trendAnalysis() { alert('Opening trend analysis tool...'); }
+        function correlationAnalysis() { alert('Opening correlation analysis tool...'); }
+        function predictiveModeling() { alert('Opening predictive modeling tool...'); }
+    </script>
+</body>
+</html>

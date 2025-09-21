@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Citizen Dashboard - Uganda Land Management System</title>
+    <link rel="stylesheet" href="../styles/main.css">
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2 style="color: var(--primary); font-family: 'Montserrat', sans-serif; font-weight: 900;">Land Management</h2>
+            <p style="font-size: 0.875rem; color: var(--muted-foreground);" id="user-info">Loading...</p>
+        </div>
+        
+        <ul class="sidebar-nav">
+            <li><a href="citizen.html">Dashboard</a></li>
+            <li><a href="#" onclick="showSection('my-land')">My Land</a></li>
+            <li><a href="#" onclick="showSection('disputes')">My Disputes</a></li>
+            <li><a href="#" onclick="showSection('report-issue')">Report Issue</a></li>
+            <li><a href="#" onclick="showSection('legal-aid')">Legal Aid</a></li>
+            <li><a href="#" onclick="showSection('resources')">Resources</a></li>
+            <li><a href="#" onclick="logout()" style="color: var(--destructive);">Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Dashboard Overview Section -->
+        <div id="dashboard-section">
+            <div class="flex justify-between items-center mb-4">
+                <h1>Citizen Dashboard</h1>
+                <div class="flex gap-4">
+                    <button class="btn btn-primary" onclick="showSection('report-issue')">Report New Issue</button>
+                </div>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="my-land-count">3</div>
+                    <div class="stat-label">My Land Parcels</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="active-disputes-count">1</div>
+                    <div class="stat-label">Active Disputes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="resolved-disputes-count">2</div>
+                    <div class="stat-label">Resolved Cases</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="notifications-count">5</div>
+                    <div class="stat-label">New Notifications</div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Recent Activity</h3>
+                </div>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Activity</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recent-activity">
+                            <tr>
+                                <td>2024-01-15</td>
+                                <td>Boundary dispute reported - Plot 123, Kampala</td>
+                                <td><span class="badge badge-warning">Under Review</span></td>
+                                <td><button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;">View Details</button></td>
+                            </tr>
+                            <tr>
+                                <td>2024-01-10</td>
+                                <td>Land certificate application submitted</td>
+                                <td><span class="badge badge-info">Processing</span></td>
+                                <td><button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;">Track Status</button></td>
+                            </tr>
+                            <tr>
+                                <td>2024-01-05</td>
+                                <td>Family land dispute resolved</td>
+                                <td><span class="badge badge-success">Resolved</span></td>
+                                <td><button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;">View Resolution</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- My Land Section -->
+        <div id="my-land-section" class="hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h1>My Land Parcels</h1>
+                <button class="btn btn-primary" onclick="showAddLandModal()">Add Land Parcel</button>
+            </div>
+
+            <div class="card">
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Parcel ID</th>
+                                <th>Location</th>
+                                <th>Size (Acres)</th>
+                                <th>Tenure Type</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>LP-KMP-001</td>
+                                <td>Kampala, Central Division</td>
+                                <td>2.5</td>
+                                <td>Freehold</td>
+                                <td><span class="badge badge-success">Registered</span></td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;">View Details</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>LP-WKS-002</td>
+                                <td>Wakiso, Kira Municipality</td>
+                                <td>1.8</td>
+                                <td>Customary</td>
+                                <td><span class="badge badge-warning">Pending Registration</span></td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;">Apply for CCO</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>LP-MKN-003</td>
+                                <td>Mukono, Seeta</td>
+                                <td>5.0</td>
+                                <td>Customary</td>
+                                <td><span class="badge badge-danger">Disputed</span></td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;">View Dispute</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Disputes Section -->
+        <div id="disputes-section" class="hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h1>My Disputes</h1>
+                <button class="btn btn-primary" onclick="showSection('report-issue')">Report New Dispute</button>
+            </div>
+
+            <div class="card">
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Dispute ID</th>
+                                <th>Type</th>
+                                <th>Land Parcel</th>
+                                <th>Date Reported</th>
+                                <th>Status</th>
+                                <th>Priority</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>LD-2024-001</td>
+                                <td>Boundary Dispute</td>
+                                <td>LP-KMP-001</td>
+                                <td>2024-01-15</td>
+                                <td><span class="badge badge-warning">Under Investigation</span></td>
+                                <td><span class="badge badge-danger">High</span></td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;">View Details</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>LD-2024-002</td>
+                                <td>Family Wrangle</td>
+                                <td>LP-MKN-003</td>
+                                <td>2024-01-05</td>
+                                <td><span class="badge badge-success">Resolved</span></td>
+                                <td><span class="badge badge-info">Medium</span></td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;">View Resolution</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Report Issue Section -->
+        <div id="report-issue-section" class="hidden">
+            <h1>Report Land Issue</h1>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">New Issue Report</h3>
+                </div>
+                
+                <form id="reportIssueForm">
+                    <div class="form-group">
+                        <label for="issueType" class="form-label">Issue Type</label>
+                        <select id="issueType" name="issueType" class="form-select" required>
+                            <option value="">Select Issue Type</option>
+                            <option value="land_grabbing">Land Grabbing</option>
+                            <option value="boundary_dispute">Boundary Dispute</option>
+                            <option value="family_wrangle">Family Wrangle</option>
+                            <option value="eviction_threat">Eviction Threat</option>
+                            <option value="title_dispute">Title Dispute</option>
+                            <option value="inheritance_dispute">Inheritance Dispute</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="landParcel" class="form-label">Affected Land Parcel</label>
+                        <select id="landParcel" name="landParcel" class="form-select" required>
+                            <option value="">Select Land Parcel</option>
+                            <option value="LP-KMP-001">LP-KMP-001 - Kampala, Central Division</option>
+                            <option value="LP-WKS-002">LP-WKS-002 - Wakiso, Kira Municipality</option>
+                            <option value="LP-MKN-003">LP-MKN-003 - Mukono, Seeta</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="description" class="form-label">Description of Issue</label>
+                        <textarea id="description" name="description" class="form-input" rows="5" required 
+                                  placeholder="Please provide detailed description of the land issue..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="priority" class="form-label">Priority Level</label>
+                        <select id="priority" name="priority" class="form-select" required>
+                            <option value="">Select Priority</option>
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                            <option value="critical">Critical</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="evidence" class="form-label">Supporting Evidence</label>
+                        <textarea id="evidence" name="evidence" class="form-input" rows="3" 
+                                  placeholder="List any documents, witnesses, or other evidence you have..."></textarea>
+                    </div>
+                    
+                    <div class="flex gap-4">
+                        <button type="submit" class="btn btn-primary">Submit Report</button>
+                        <button type="button" class="btn btn-secondary" onclick="showSection('dashboard')">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Legal Aid Section -->
+        <div id="legal-aid-section" class="hidden">
+            <h1>Legal Aid Resources</h1>
+            
+            <div class="dashboard-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Available Legal Aid Providers</h3>
+                    </div>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border);">
+                            <strong>Uganda Law Society</strong><br>
+                            <small>Phone: +256-414-250-077 | Email: info@uls.or.ug</small>
+                        </li>
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border);">
+                            <strong>Legal Aid Service Providers Network</strong><br>
+                            <small>Phone: +256-414-344-890 | Email: info@laspnet.org</small>
+                        </li>
+                        <li style="padding: 0.5rem 0;">
+                            <strong>Justice Law Chambers</strong><br>
+                            <small>Phone: +256-414-256-789 | Email: info@justicechambers.ug</small>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Quick Actions</h3>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        <button class="btn btn-primary">Request Legal Consultation</button>
+                        <button class="btn btn-secondary">Download Legal Forms</button>
+                        <button class="btn btn-secondary">Find Nearby Legal Aid</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resources Section -->
+        <div id="resources-section" class="hidden">
+            <h1>Educational Resources</h1>
+            
+            <div class="dashboard-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Land Rights Guides</h3>
+                    </div>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border);">
+                            <a href="#" style="color: var(--primary); text-decoration: none;">Understanding Your Land Rights in Uganda</a>
+                        </li>
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border);">
+                            <a href="#" style="color: var(--primary); text-decoration: none;">How to Apply for Certificate of Customary Ownership</a>
+                        </li>
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border);">
+                            <a href="#" style="color: var(--primary); text-decoration: none;">Resolving Land Disputes: A Step-by-Step Guide</a>
+                        </li>
+                        <li style="padding: 0.5rem 0;">
+                            <a href="#" style="color: var(--primary); text-decoration: none;">Protecting Your Land from Grabbing</a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Important Contacts</h3>
+                    </div>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border);">
+                            <strong>Ministry of Lands</strong><br>
+                            <small>+256-414-341-278</small>
+                        </li>
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border);">
+                            <strong>Uganda Land Commission</strong><br>
+                            <small>+256-414-343-962</small>
+                        </li>
+                        <li style="padding: 0.5rem 0;">
+                            <strong>Police Land Protection Unit</strong><br>
+                            <small>+256-414-344-678</small>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/auth.js"></script>
+    <script>
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeDashboard();
+            showSection('dashboard');
+        });
+
+        // Section navigation
+        function showSection(sectionName) {
+            // Hide all sections
+            const sections = document.querySelectorAll('[id$="-section"]');
+            sections.forEach(section => section.classList.add('hidden'));
+            
+            // Show selected section
+            const targetSection = document.getElementById(sectionName + '-section');
+            if (targetSection) {
+                targetSection.classList.remove('hidden');
+            }
+            
+            // Update navigation active state
+            const navLinks = document.querySelectorAll('.sidebar-nav a');
+            navLinks.forEach(link => link.classList.remove('active'));
+            
+            // Set active nav item
+            const activeLink = document.querySelector(`[onclick="showSection('${sectionName}')"]`);
+            if (activeLink) {
+                activeLink.classList.add('active');
+            }
+        }
+
+        // Handle report issue form
+        document.getElementById('reportIssueForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const issueData = {
+                type: formData.get('issueType'),
+                landParcel: formData.get('landParcel'),
+                description: formData.get('description'),
+                priority: formData.get('priority'),
+                evidence: formData.get('evidence'),
+                reportedBy: auth.getCurrentUser().username,
+                dateReported: new Date().toISOString().split('T')[0]
+            };
+            
+            // In a real application, this would send data to the server
+            console.log('Issue reported:', issueData);
+            
+            alert('Issue reported successfully! You will receive updates on the progress.');
+            this.reset();
+            showSection('dashboard');
+        });
+    </script>
+</body>
+</html>

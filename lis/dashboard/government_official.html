@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Government Official Dashboard - Uganda Land Management System</title>
+    <link rel="stylesheet" href="../styles/main.css">
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2 style="color: var(--primary); font-family: 'Montserrat', sans-serif; font-weight: 900;">Land Management</h2>
+            <p style="font-size: 0.875rem; color: var(--muted-foreground);" id="user-info">Loading...</p>
+        </div>
+        
+        <ul class="sidebar-nav">
+            <li><a href="government_official.html">Dashboard</a></li>
+            <li><a href="#" onclick="showSection('disputes')">Manage Disputes</a></li>
+            <li><a href="#" onclick="showSection('land-records')">Land Records</a></li>
+            <li><a href="#" onclick="showSection('certificates')">CCO Applications</a></li>
+            <li><a href="#" onclick="showSection('statistics')">Regional Statistics</a></li>
+            <li><a href="#" onclick="showSection('reports')">Generate Reports</a></li>
+            <li><a href="#" onclick="showSection('institutions')">Institutions</a></li>
+            <li><a href="#" onclick="logout()" style="color: var(--destructive);">Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Dashboard Overview Section -->
+        <div id="dashboard-section">
+            <div class="flex justify-between items-center mb-4">
+                <h1>Government Official Dashboard</h1>
+                <div class="flex gap-4">
+                    <button class="btn btn-primary" onclick="showSection('disputes')">Review Disputes</button>
+                    <button class="btn btn-secondary" onclick="showSection('reports')">Generate Report</button>
+                </div>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="pending-disputes-count">47</div>
+                    <div class="stat-label">Pending Disputes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="cco-applications-count">23</div>
+                    <div class="stat-label">CCO Applications</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="land-grabbing-cases-count">12</div>
+                    <div class="stat-label">Land Grabbing Cases</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="resolved-this-month-count">18</div>
+                    <div class="stat-label">Resolved This Month</div>
+                </div>
+            </div>
+
+            <!-- Priority Cases -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">High Priority Cases Requiring Attention</h3>
+                </div>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Case ID</th>
+                                <th>Type</th>
+                                <th>Location</th>
+                                <th>Complainant</th>
+                                <th>Days Open</th>
+                                <th>Priority</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>LD-2024-001</td>
+                                <td>Land Grabbing</td>
+                                <td>Kampala District</td>
+                                <td>John Mukasa</td>
+                                <td>15</td>
+                                <td><span class="badge badge-danger">Critical</span></td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="reviewCase('LD-2024-001')">Review</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>LD-2024-003</td>
+                                <td>Forced Eviction</td>
+                                <td>Wakiso District</td>
+                                <td>Mary Nakato</td>
+                                <td>8</td>
+                                <td><span class="badge badge-danger">High</span></td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="reviewCase('LD-2024-003')">Review</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>LD-2024-005</td>
+                                <td>Boundary Dispute</td>
+                                <td>Mukono District</td>
+                                <td>Peter Ssali</td>
+                                <td>12</td>
+                                <td><span class="badge badge-warning">High</span></td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="reviewCase('LD-2024-005')">Review</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Recent System Activity</h3>
+                </div>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Activity</th>
+                                <th>User</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>10:30 AM</td>
+                                <td>New land grabbing case reported</td>
+                                <td>Sarah Nambi (Citizen)</td>
+                                <td><span class="badge badge-warning">New</span></td>
+                            </tr>
+                            <tr>
+                                <td>09:15 AM</td>
+                                <td>CCO application approved</td>
+                                <td>James Okello (Citizen)</td>
+                                <td><span class="badge badge-success">Approved</span></td>
+                            </tr>
+                            <tr>
+                                <td>08:45 AM</td>
+                                <td>Dispute mediation scheduled</td>
+                                <td>Legal Aid Officer</td>
+                                <td><span class="badge badge-info">Scheduled</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manage Disputes Section -->
+        <div id="disputes-section" class="hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h1>Manage Land Disputes</h1>
+                <div class="flex gap-4">
+                    <select id="disputeFilter" class="form-select" style="width: auto;" onchange="filterDisputes()">
+                        <option value="all">All Disputes</option>
+                        <option value="pending">Pending</option>
+                        <option value="under_investigation">Under Investigation</option>
+                        <option value="mediation">In Mediation</option>
+                        <option value="resolved">Resolved</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="exportDisputes()">Export Data</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Dispute ID</th>
+                                <th>Type</th>
+                                <th>Location</th>
+                                <th>Complainant</th>
+                                <th>Date Reported</th>
+                                <th>Status</th>
+                                <th>Priority</th>
+                                <th>Assigned Officer</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="disputes-table">
+                            <tr>
+                                <td>LD-2024-001</td>
+                                <td>Land Grabbing</td>
+                                <td>Kampala District</td>
+                                <td>John Mukasa</td>
+                                <td>2024-01-15</td>
+                                <td><span class="badge badge-warning">Under Investigation</span></td>
+                                <td><span class="badge badge-danger">Critical</span></td>
+                                <td>Officer Namuli</td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="reviewCase('LD-2024-001')">Review</button>
+                                    <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="assignOfficer('LD-2024-001')">Reassign</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>LD-2024-002</td>
+                                <td>Boundary Dispute</td>
+                                <td>Wakiso District</td>
+                                <td>Mary Nakato</td>
+                                <td>2024-01-14</td>
+                                <td><span class="badge badge-info">Mediation</span></td>
+                                <td><span class="badge badge-warning">Medium</span></td>
+                                <td>Officer Kato</td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="reviewCase('LD-2024-002')">Review</button>
+                                    <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="scheduleMediation('LD-2024-002')">Schedule</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Land Records Section -->
+        <div id="land-records-section" class="hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h1>Land Records Management</h1>
+                <div class="flex gap-4">
+                    <input type="text" id="searchLand" class="form-input" placeholder="Search by Parcel ID or Location" style="width: 300px;">
+                    <button class="btn btn-primary" onclick="searchLandRecords()">Search</button>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <div class="stat-number">15,247</div>
+                    <div class="stat-label">Total Land Parcels</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">8,934</div>
+                    <div class="stat-label">Registered Parcels</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">6,313</div>
+                    <div class="stat-label">Unregistered Parcels</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">1,156</div>
+                    <div class="stat-label">Disputed Parcels</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Land Parcel Records</h3>
+                </div>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Parcel ID</th>
+                                <th>Location</th>
+                                <th>Size (Acres)</th>
+                                <th>Tenure Type</th>
+                                <th>Owner</th>
+                                <th>Registration Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>LP-KMP-001</td>
+                                <td>Kampala, Central Division</td>
+                                <td>2.5</td>
+                                <td>Freehold</td>
+                                <td>John Mukasa</td>
+                                <td><span class="badge badge-success">Registered</span></td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;">View Details</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>LP-WKS-002</td>
+                                <td>Wakiso, Kira Municipality</td>
+                                <td>1.8</td>
+                                <td>Customary</td>
+                                <td>Mary Nakato</td>
+                                <td><span class="badge badge-warning">Pending Registration</span></td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;">Process Registration</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- CCO Applications Section -->
+        <div id="certificates-section" class="hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h1>Certificate of Customary Ownership Applications</h1>
+                <button class="btn btn-primary" onclick="processBulkCCO()">Process Bulk Applications</button>
+            </div>
+
+            <div class="card">
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Application ID</th>
+                                <th>Applicant</th>
+                                <th>Land Parcel</th>
+                                <th>Application Date</th>
+                                <th>Status</th>
+                                <th>Review Officer</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>CCO-2024-001</td>
+                                <td>James Okello</td>
+                                <td>LP-GUL-045</td>
+                                <td>2024-01-10</td>
+                                <td><span class="badge badge-warning">Under Review</span></td>
+                                <td>Officer Namuli</td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="reviewCCO('CCO-2024-001')">Review</button>
+                                    <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="approveCCO('CCO-2024-001')">Approve</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>CCO-2024-002</td>
+                                <td>Sarah Nambi</td>
+                                <td>LP-MBR-023</td>
+                                <td>2024-01-08</td>
+                                <td><span class="badge badge-info">Approved</span></td>
+                                <td>Officer Kato</td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="issueCertificate('CCO-2024-002')">Issue Certificate</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Section -->
+        <div id="statistics-section" class="hidden">
+            <h1>Regional Land Statistics</h1>
+            
+            <div class="dashboard-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Disputes by Region</h3>
+                    </div>
+                    <div style="padding: 1rem;">
+                        <div style="margin-bottom: 1rem;">
+                            <strong>Central Region:</strong> 45% (562 cases)
+                            <div style="background-color: var(--muted); height: 8px; border-radius: 4px; margin-top: 4px;">
+                                <div style="background-color: var(--primary); height: 100%; width: 45%; border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <strong>Northern Region:</strong> 28% (350 cases)
+                            <div style="background-color: var(--muted); height: 8px; border-radius: 4px; margin-top: 4px;">
+                                <div style="background-color: var(--secondary); height: 100%; width: 28%; border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <strong>Eastern Region:</strong> 18% (225 cases)
+                            <div style="background-color: var(--muted); height: 8px; border-radius: 4px; margin-top: 4px;">
+                                <div style="background-color: var(--chart-3); height: 100%; width: 18%; border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <strong>Western Region:</strong> 9% (110 cases)
+                            <div style="background-color: var(--muted); height: 8px; border-radius: 4px; margin-top: 4px;">
+                                <div style="background-color: var(--chart-4); height: 100%; width: 9%; border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Land Tenure Distribution</h3>
+                    </div>
+                    <div style="padding: 1rem;">
+                        <div style="margin-bottom: 1rem;">
+                            <strong>Customary:</strong> 75%
+                            <div style="background-color: var(--muted); height: 8px; border-radius: 4px; margin-top: 4px;">
+                                <div style="background-color: var(--primary); height: 100%; width: 75%; border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <strong>Mailo:</strong> 15%
+                            <div style="background-color: var(--muted); height: 8px; border-radius: 4px; margin-top: 4px;">
+                                <div style="background-color: var(--secondary); height: 100%; width: 15%; border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <strong>Freehold:</strong> 8%
+                            <div style="background-color: var(--muted); height: 8px; border-radius: 4px; margin-top: 4px;">
+                                <div style="background-color: var(--chart-3); height: 100%; width: 8%; border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <strong>Leasehold:</strong> 2%
+                            <div style="background-color: var(--muted); height: 8px; border-radius: 4px; margin-top: 4px;">
+                                <div style="background-color: var(--chart-4); height: 100%; width: 2%; border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reports Section -->
+        <div id="reports-section" class="hidden">
+            <h1>Generate Reports</h1>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Report Generator</h3>
+                </div>
+                
+                <form id="reportForm">
+                    <div class="form-group">
+                        <label for="reportType" class="form-label">Report Type</label>
+                        <select id="reportType" name="reportType" class="form-select" required>
+                            <option value="">Select Report Type</option>
+                            <option value="dispute_summary">Dispute Summary Report</option>
+                            <option value="land_statistics">Land Statistics Report</option>
+                            <option value="cco_applications">CCO Applications Report</option>
+                            <option value="regional_analysis">Regional Analysis Report</option>
+                            <option value="monthly_summary">Monthly Summary Report</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="dateRange" class="form-label">Date Range</label>
+                        <div class="flex gap-4">
+                            <input type="date" id="startDate" name="startDate" class="form-input" required>
+                            <input type="date" id="endDate" name="endDate" class="form-input" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="region" class="form-label">Region (Optional)</label>
+                        <select id="region" name="region" class="form-select">
+                            <option value="">All Regions</option>
+                            <option value="central">Central</option>
+                            <option value="northern">Northern</option>
+                            <option value="eastern">Eastern</option>
+                            <option value="western">Western</option>
+                        </select>
+                    </div>
+                    
+                    <div class="flex gap-4">
+                        <button type="submit" class="btn btn-primary">Generate Report</button>
+                        <button type="button" class="btn btn-secondary" onclick="scheduleReport()">Schedule Report</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Institutions Section -->
+        <div id="institutions-section" class="hidden">
+            <h1>Government Institutions</h1>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Land Governance Institutions</h3>
+                </div>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Institution</th>
+                                <th>Type</th>
+                                <th>Level</th>
+                                <th>Contact</th>
+                                <th>Effectiveness Rating</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Ministry of Lands, Housing and Urban Development</td>
+                                <td>Ministry</td>
+                                <td>National</td>
+                                <td>+256-414-341-278</td>
+                                <td><span class="badge badge-success">4.2/5</span></td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;">View Details</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Uganda Land Commission</td>
+                                <td>Commission</td>
+                                <td>National</td>
+                                <td>+256-414-343-962</td>
+                                <td><span class="badge badge-warning">3.8/5</span></td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;">View Details</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>District Land Board - Kampala</td>
+                                <td>Board</td>
+                                <td>District</td>
+                                <td>+256-414-256-789</td>
+                                <td><span class="badge badge-info">4.0/5</span></td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;">View Details</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/auth.js"></script>
+    <script>
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeDashboard();
+            showSection('dashboard');
+        });
+
+        // Section navigation
+        function showSection(sectionName) {
+            const sections = document.querySelectorAll('[id$="-section"]');
+            sections.forEach(section => section.classList.add('hidden'));
+            
+            const targetSection = document.getElementById(sectionName + '-section');
+            if (targetSection) {
+                targetSection.classList.remove('hidden');
+            }
+            
+            const navLinks = document.querySelectorAll('.sidebar-nav a');
+            navLinks.forEach(link => link.classList.remove('active'));
+            
+            const activeLink = document.querySelector(`[onclick="showSection('${sectionName}')"]`);
+            if (activeLink) {
+                activeLink.classList.add('active');
+            }
+        }
+
+        // Case management functions
+        function reviewCase(caseId) {
+            alert(`Opening case ${caseId} for detailed review...`);
+        }
+
+        function assignOfficer(caseId) {
+            const officer = prompt('Enter officer name to assign:');
+            if (officer) {
+                alert(`Case ${caseId} assigned to ${officer}`);
+            }
+        }
+
+        function scheduleMediation(caseId) {
+            const date = prompt('Enter mediation date (YYYY-MM-DD):');
+            if (date) {
+                alert(`Mediation scheduled for case ${caseId} on ${date}`);
+            }
+        }
+
+        // CCO management functions
+        function reviewCCO(applicationId) {
+            alert(`Opening CCO application ${applicationId} for review...`);
+        }
+
+        function approveCCO(applicationId) {
+            if (confirm(`Approve CCO application ${applicationId}?`)) {
+                alert(`CCO application ${applicationId} approved`);
+            }
+        }
+
+        function issueCertificate(applicationId) {
+            alert(`Issuing certificate for application ${applicationId}...`);
+        }
+
+        // Report generation
+        document.getElementById('reportForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const reportData = {
+                type: formData.get('reportType'),
+                startDate: formData.get('startDate'),
+                endDate: formData.get('endDate'),
+                region: formData.get('region'),
+                generatedBy: auth.getCurrentUser().username,
+                generatedAt: new Date().toISOString()
+            };
+            
+            console.log('Generating report:', reportData);
+            alert('Report generation started. You will receive an email when it\'s ready.');
+        });
+
+        // Utility functions
+        function filterDisputes() {
+            const filter = document.getElementById('disputeFilter').value;
+            console.log('Filtering disputes by:', filter);
+        }
+
+        function exportDisputes() {
+            alert('Exporting dispute data to CSV...');
+        }
+
+        function searchLandRecords() {
+            const query = document.getElementById('searchLand').value;
+            console.log('Searching land records for:', query);
+        }
+
+        function processBulkCCO() {
+            alert('Processing bulk CCO applications...');
+        }
+
+        function scheduleReport() {
+            alert('Report scheduling feature coming soon...');
+        }
+    </script>
+</body>
+</html>

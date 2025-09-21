@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Uganda Land Management System</title>
+    <link rel="stylesheet" href="../styles/main.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2 style="color: var(--primary); font-family: 'Montserrat', sans-serif; font-weight: 900;">Land Management</h2>
+            <p style="font-size: 0.875rem; color: var(--muted-foreground);" id="user-info">Loading...</p>
+        </div>
+        
+        <ul class="sidebar-nav">
+            <li><a href="admin.html">Dashboard</a></li>
+            <li><a href="#" onclick="showSection('user-management')">User Management</a></li>
+            <li><a href="#" onclick="showSection('system-monitoring')">System Monitoring</a></li>
+            <li><a href="#" onclick="showSection('data-management')">Data Management</a></li>
+            <li><a href="#" onclick="showSection('security')">Security & Audit</a></li>
+            <li><a href="#" onclick="showSection('system-config')">System Configuration</a></li>
+            <li><a href="#" onclick="showSection('backup-restore')">Backup & Restore</a></li>
+            <li><a href="#" onclick="showSection('reports')">System Reports</a></li>
+            <li><a href="#" onclick="logout()" style="color: var(--destructive);">Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Dashboard Overview Section -->
+        <div id="dashboard-section">
+            <div class="flex justify-between items-center mb-4">
+                <h1>System Administrator Dashboard</h1>
+                <div class="flex gap-4">
+                    <button class="btn btn-primary" onclick="showSection('system-monitoring')">System Health</button>
+                    <button class="btn btn-secondary" onclick="showSection('backup-restore')">Backup System</button>
+                </div>
+            </div>
+
+            <!-- System Health Cards -->
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <div class="stat-number" style="color: var(--chart-2);" id="system-uptime">99.8%</div>
+                    <div class="stat-label">System Uptime</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="total-users-count">2,847</div>
+                    <div class="stat-label">Total Users</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="active-sessions-count">156</div>
+                    <div class="stat-label">Active Sessions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="database-size">2.4GB</div>
+                    <div class="stat-label">Database Size</div>
+                </div>
+            </div>
+
+            <!-- System Alerts -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">System Alerts & Notifications</h3>
+                </div>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Alert Type</th>
+                                <th>Message</th>
+                                <th>Severity</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>12:30 PM</td>
+                                <td>Security</td>
+                                <td>Multiple failed login attempts detected</td>
+                                <td><span class="badge badge-warning">Medium</span></td>
+                                <td><span class="badge badge-warning">Active</span></td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="investigateAlert('SEC-001')">Investigate</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>11:15 AM</td>
+                                <td>Performance</td>
+                                <td>Database query response time increased</td>
+                                <td><span class="badge badge-info">Low</span></td>
+                                <td><span class="badge badge-success">Resolved</span></td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="viewAlert('PERF-002')">View Details</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>10:45 AM</td>
+                                <td>System</td>
+                                <td>Scheduled backup completed successfully</td>
+                                <td><span class="badge badge-success">Info</span></td>
+                                <td><span class="badge badge-success">Completed</span></td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="viewBackupLog()">View Log</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- System Performance Charts -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">User Activity (Last 7 Days)</h3>
+                    </div>
+                    <canvas id="userActivityChart" width="400" height="200"></canvas>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">System Resource Usage</h3>
+                    </div>
+                    <canvas id="resourceChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Management Section -->
+        <div id="user-management-section" class="hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h1>User Management</h1>
+                <div class="flex gap-4">
+                    <button class="btn btn-primary" onclick="createUser()">Create New User</button>
+                    <button class="btn btn-secondary" onclick="exportUsers()">Export Users</button>
+                </div>
+            </div>
+
+            <!-- User Statistics -->
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <div class="stat-number">1,245</div>
+                    <div class="stat-label">Citizens</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">89</div>
+                    <div class="stat-label">Government Officials</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">34</div>
+                    <div class="stat-label">Legal Aid Providers</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">12</div>
+                    <div class="stat-label">Researchers</div>
+                </div>
+            </div>
+
+            <!-- User Management Table -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="flex justify-between items-center">
+                        <h3 class="card-title">System Users</h3>
+                        <div class="flex gap-4">
+                            <input type="text" id="userSearch" class="form-input" placeholder="Search users..." style="width: 250px;">
+                            <select id="userTypeFilter" class="form-select" style="width: auto;" onchange="filterUsers()">
+                                <option value="all">All User Types</option>
+                                <option value="citizen">Citizens</option>
+                                <option value="government_official">Government Officials</option>
+                                <option value="legal_aid">Legal Aid</option>
+                                <option value="researcher">Researchers</option>
+                                <option value="admin">Administrators</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>User ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>User Type</th>
+                                <th>Status</th>
+                                <th>Last Login</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table">
+                            <tr>
+                                <td>USR-001</td>
+                                <td>John Mukasa</td>
+                                <td>john.mukasa@email.com</td>
+                                <td><span class="badge badge-info">Citizen</span></td>
+                                <td><span class="badge badge-success">Active</span></td>
+                                <td>2024-01-15 10:30</td>
+                                <td>2023-12-01</td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="editUser('USR-001')">Edit</button>
+                                    <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="viewUserActivity('USR-001')">Activity</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>USR-002</td>
+                                <td>Sarah Namuli</td>
+                                <td>sarah.namuli@gov.ug</td>
+                                <td><span class="badge badge-warning">Government Official</span></td>
+                                <td><span class="badge badge-success">Active</span></td>
+                                <td>2024-01-15 14:20</td>
+                                <td>2023-11-15</td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="editUser('USR-002')">Edit</button>
+                                    <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="viewUserActivity('USR-002')">Activity</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Monitoring Section -->
+        <div id="system-monitoring-section" class="hidden">
+            <h1>System Monitoring & Performance</h1>
+            
+            <!-- Real-time Metrics -->
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <div class="stat-number" style="color: var(--chart-2);">85%</div>
+                    <div class="stat-label">CPU Usage</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" style="color: var(--chart-1);">62%</div>
+                    <div class="stat-label">Memory Usage</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" style="color: var(--chart-3);">45%</div>
+                    <div class="stat-label">Disk Usage</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" style="color: var(--chart-4);">156ms</div>
+                    <div class="stat-label">Avg Response Time</div>
+                </div>
+            </div>
+
+            <!-- Performance Charts -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Server Performance (24h)</h3>
+                    </div>
+                    <canvas id="serverPerformanceChart" width="400" height="200"></canvas>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Database Performance</h3>
+                    </div>
+                    <div style="padding: 1rem;">
+                        <div style="margin-bottom: 1rem;">
+                            <div class="flex justify-between items-center">
+                                <span>Query Performance</span>
+                                <span><strong>Good</strong></span>
+                            </div>
+                            <div style="background-color: var(--muted); height: 8px; border-radius: 4px; margin-top: 4px;">
+                                <div style="background-color: var(--chart-2); height: 100%; width: 85%; border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <div class="flex justify-between items-center">
+                                <span>Connection Pool</span>
+                                <span><strong>Optimal</strong></span>
+                            </div>
+                            <div style="background-color: var(--muted); height: 8px; border-radius: 4px; margin-top: 4px;">
+                                <div style="background-color: var(--chart-1); height: 100%; width: 92%; border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-center">
+                                <span>Index Efficiency</span>
+                                <span><strong>Excellent</strong></span>
+                            </div>
+                            <div style="background-color: var(--muted); height: 8px; border-radius: 4px; margin-top: 4px;">
+                                <div style="background-color: var(--primary); height: 100%; width: 96%; border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Management Section -->
+        <div id="data-management-section" class="hidden">
+            <h1>Data Management & Integrity</h1>
+            
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <div class="stat-number">15,247</div>
+                    <div class="stat-label">Total Records</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">99.9%</div>
+                    <div class="stat-label">Data Integrity</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">2.4GB</div>
+                    <div class="stat-label">Database Size</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">24h</div>
+                    <div class="stat-label">Last Backup</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Data Management Tools</h3>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; padding: 1rem;">
+                    <button class="btn btn-secondary" onclick="runDataIntegrityCheck()">Data Integrity Check</button>
+                    <button class="btn btn-secondary" onclick="optimizeDatabase()">Optimize Database</button>
+                    <button class="btn btn-secondary" onclick="cleanupOldData()">Cleanup Old Data</button>
+                    <button class="btn btn-secondary" onclick="rebuildIndexes()">Rebuild Indexes</button>
+                    <button class="btn btn-secondary" onclick="analyzePerformance()">Analyze Performance</button>
+                    <button class="btn btn-secondary" onclick="exportDatabase()">Export Database</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Data Quality Report</h3>
+                </div>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Table</th>
+                                <th>Records</th>
+                                <th>Data Quality</th>
+                                <th>Last Updated</th>
+                                <th>Issues</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>land_disputes</td>
+                                <td>1,247</td>
+                                <td><span class="badge badge-success">Excellent</span></td>
+                                <td>2024-01-15</td>
+                                <td>0</td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="analyzeTable('land_disputes')">Analyze</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>land_parcels</td>
+                                <td>15,247</td>
+                                <td><span class="badge badge-warning">Good</span></td>
+                                <td>2024-01-15</td>
+                                <td>3</td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="fixDataIssues('land_parcels')">Fix Issues</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Security & Audit Section -->
+        <div id="security-section" class="hidden">
+            <h1>Security & Audit Management</h1>
+            
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <div class="stat-number" style="color: var(--chart-2);">0</div>
+                    <div class="stat-label">Security Threats</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">23</div>
+                    <div class="stat-label">Failed Login Attempts</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">156</div>
+                    <div class="stat-label">Active Sessions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">99.8%</div>
+                    <div class="stat-label">Security Score</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Security Audit Log</h3>
+                </div>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>User</th>
+                                <th>Action</th>
+                                <th>IP Address</th>
+                                <th>Status</th>
+                                <th>Risk Level</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2024-01-15 14:30:25</td>
+                                <td>admin@system.ug</td>
+                                <td>User role modified</td>
+                                <td>192.168.1.100</td>
+                                <td><span class="badge badge-success">Success</span></td>
+                                <td><span class="badge badge-info">Low</span></td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="viewAuditDetails('AUD-001')">Details</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>2024-01-15 14:25:10</td>
+                                <td>unknown</td>
+                                <td>Failed login attempt</td>
+                                <td>203.45.67.89</td>
+                                <td><span class="badge badge-danger">Failed</span></td>
+                                <td><span class="badge badge-warning">Medium</span></td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="blockIP('203.45.67.89')">Block IP</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Security Tools</h3>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; padding: 1rem;">
+                    <button class="btn btn-secondary" onclick="runSecurityScan()">Security Scan</button>
+                    <button class="btn btn-secondary" onclick="updateSecurityPolicies()">Update Policies</button>
+                    <button class="btn btn-secondary" onclick="generateSecurityReport()">Security Report</button>
+                    <button class="btn btn-secondary" onclick="manageFirewall()">Firewall Settings</button>
+                    <button class="btn btn-secondary" onclick="reviewPermissions()">Review Permissions</button>
+                    <button class="btn btn-secondary" onclick="configureSSL()">SSL Configuration</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Configuration Section -->
+        <div id="system-config-section" class="hidden">
+            <h1>System Configuration</h1>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">General Settings</h3>
+                </div>
+                
+                <form id="systemConfigForm">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label for="systemName" class="form-label">System Name</label>
+                            <input type="text" id="systemName" name="systemName" class="form-input" value="Uganda Land Management System">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="systemVersion" class="form-label">System Version</label>
+                            <input type="text" id="systemVersion" name="systemVersion" class="form-input" value="1.2.3" readonly>
+                        </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label for="maxUsers" class="form-label">Maximum Concurrent Users</label>
+                            <input type="number" id="maxUsers" name="maxUsers" class="form-input" value="500">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="sessionTimeout" class="form-label">Session Timeout (minutes)</label>
+                            <input type="number" id="sessionTimeout" name="sessionTimeout" class="form-input" value="30">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="maintenanceMode" class="form-label">Maintenance Mode</label>
+                        <select id="maintenanceMode" name="maintenanceMode" class="form-select">
+                            <option value="false">Disabled</option>
+                            <option value="true">Enabled</option>
+                        </select>
+                    </div>
+                    
+                    <div class="flex gap-4">
+                        <button type="submit" class="btn btn-primary">Save Configuration</button>
+                        <button type="button" class="btn btn-secondary" onclick="resetToDefaults()">Reset to Defaults</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Email Configuration</h3>
+                </div>
+                
+                <form id="emailConfigForm">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label for="smtpServer" class="form-label">SMTP Server</label>
+                            <input type="text" id="smtpServer" name="smtpServer" class="form-input" value="smtp.gmail.com">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="smtpPort" class="form-label">SMTP Port</label>
+                            <input type="number" id="smtpPort" name="smtpPort" class="form-input" value="587">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="fromEmail" class="form-label">From Email Address</label>
+                        <input type="email" id="fromEmail" name="fromEmail" class="form-input" value="noreply@landmanagement.ug">
+                    </div>
+                    
+                    <div class="flex gap-4">
+                        <button type="submit" class="btn btn-primary">Save Email Config</button>
+                        <button type="button" class="btn btn-secondary" onclick="testEmailConfig()">Test Configuration</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Backup & Restore Section -->
+        <div id="backup-restore-section" class="hidden">
+            <h1>Backup & Restore Management</h1>
+            
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <div class="stat-number">24h</div>
+                    <div class="stat-label">Last Backup</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">15</div>
+                    <div class="stat-label">Available Backups</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">2.4GB</div>
+                    <div class="stat-label">Backup Size</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">99.9%</div>
+                    <div class="stat-label">Success Rate</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Backup Operations</h3>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; padding: 1rem;">
+                    <button class="btn btn-primary" onclick="createBackup()">Create Full Backup</button>
+                    <button class="btn btn-secondary" onclick="createIncrementalBackup()">Incremental Backup</button>
+                    <button class="btn btn-secondary" onclick="scheduleBackup()">Schedule Backup</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Backup History</h3>
+                </div>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Backup ID</th>
+                                <th>Type</th>
+                                <th>Date Created</th>
+                                <th>Size</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>BKP-2024-001</td>
+                                <td>Full Backup</td>
+                                <td>2024-01-15 02:00:00</td>
+                                <td>2.4GB</td>
+                                <td><span class="badge badge-success">Completed</span></td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="restoreBackup('BKP-2024-001')">Restore</button>
+                                    <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="downloadBackup('BKP-2024-001')">Download</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>BKP-2024-002</td>
+                                <td>Incremental</td>
+                                <td>2024-01-14 02:00:00</td>
+                                <td>156MB</td>
+                                <td><span class="badge badge-success">Completed</span></td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="restoreBackup('BKP-2024-002')">Restore</button>
+                                    <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="downloadBackup('BKP-2024-002')">Download</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reports Section -->
+        <div id="reports-section" class="hidden">
+            <h1>System Reports & Analytics</h1>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Generate System Report</h3>
+                </div>
+                
+                <form id="systemReportForm">
+                    <div class="form-group">
+                        <label for="reportType" class="form-label">Report Type</label>
+                        <select id="reportType" name="reportType" class="form-select" required>
+                            <option value="">Select Report Type</option>
+                            <option value="user_activity">User Activity Report</option>
+                            <option value="system_performance">System Performance Report</option>
+                            <option value="security_audit">Security Audit Report</option>
+                            <option value="data_quality">Data Quality Report</option>
+                            <option value="usage_statistics">Usage Statistics Report</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="dateRange" class="form-label">Date Range</label>
+                        <div class="flex gap-4">
+                            <input type="date" id="startDate" name="startDate" class="form-input" required>
+                            <input type="date" id="endDate" name="endDate" class="form-input" required>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-4">
+                        <button type="submit" class="btn btn-primary">Generate Report</button>
+                        <button type="button" class="btn btn-secondary" onclick="scheduleReport()">Schedule Report</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/auth.js"></script>
+    <script>
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeDashboard();
+            showSection('dashboard');
+            initializeCharts();
+        });
+
+        // Section navigation
+        function showSection(sectionName) {
+            const sections = document.querySelectorAll('[id$="-section"]');
+            sections.forEach(section => section.classList.add('hidden'));
+            
+            const targetSection = document.getElementById(sectionName + '-section');
+            if (targetSection) {
+                targetSection.classList.remove('hidden');
+            }
+            
+            const navLinks = document.querySelectorAll('.sidebar-nav a');
+            navLinks.forEach(link => link.classList.remove('active'));
+            
+            const activeLink = document.querySelector(`[onclick="showSection('${sectionName}')"]`);
+            if (activeLink) {
+                activeLink.classList.add('active');
+            }
+        }
+
+        // Initialize charts
+        function initializeCharts() {
+            // User Activity Chart
+            const activityCtx = document.getElementById('userActivityChart').getContext('2d');
+            new Chart(activityCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Active Users',
+                        data: [120, 135, 142, 158, 167, 89, 76],
+                        borderColor: '#059669',
+                        backgroundColor: 'rgba(5, 150, 105, 0.1)',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+
+            // Resource Usage Chart
+            const resourceCtx = document.getElementById('resourceChart').getContext('2d');
+            new Chart(resourceCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['CPU', 'Memory', 'Disk', 'Network'],
+                    datasets: [{
+                        data: [85, 62, 45, 23],
+                        backgroundColor: ['#059669', '#10b981', '#475569', '#dc2626']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+
+            // Server Performance Chart (if exists)
+            const serverPerfCtx = document.getElementById('serverPerformanceChart');
+            if (serverPerfCtx) {
+                new Chart(serverPerfCtx.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00'],
+                        datasets: [{
+                            label: 'Response Time (ms)',
+                            data: [120, 110, 145, 180, 165, 140],
+                            borderColor: '#dc2626',
+                            backgroundColor: 'rgba(220, 38, 38, 0.1)',
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                });
+            }
+        }
+
+        // User Management Functions
+        function createUser() {
+            alert('Opening user creation form...');
+        }
+
+        function editUser(userId) {
+            alert(`Editing user ${userId}...`);
+        }
+
+        function viewUserActivity(userId) {
+            alert(`Viewing activity for user ${userId}...`);
+        }
+
+        function filterUsers() {
+            const filter = document.getElementById('userTypeFilter').value;
+            console.log('Filtering users by:', filter);
+        }
+
+        function exportUsers() {
+            alert('Exporting user data...');
+        }
+
+        // System Monitoring Functions
+        function investigateAlert(alertId) {
+            alert(`Investigating alert ${alertId}...`);
+        }
+
+        function viewAlert(alertId) {
+            alert(`Viewing alert details for ${alertId}...`);
+        }
+
+        function viewBackupLog() {
+            alert('Opening backup log...');
+        }
+
+        // Data Management Functions
+        function runDataIntegrityCheck() {
+            alert('Running data integrity check...');
+        }
+
+        function optimizeDatabase() {
+            if (confirm('This operation may take several minutes. Continue?')) {
+                alert('Database optimization started...');
+            }
+        }
+
+        function cleanupOldData() {
+            if (confirm('This will permanently delete old data. Continue?')) {
+                alert('Data cleanup started...');
+            }
+        }
+
+        function rebuildIndexes() {
+            alert('Rebuilding database indexes...');
+        }
+
+        function analyzePerformance() {
+            alert('Analyzing database performance...');
+        }
+
+        function exportDatabase() {
+            alert('Exporting database...');
+        }
+
+        function analyzeTable(tableName) {
+            alert(`Analyzing table: ${tableName}...`);
+        }
+
+        function fixDataIssues(tableName) {
+            alert(`Fixing data issues in table: ${tableName}...`);
+        }
+
+        // Security Functions
+        function viewAuditDetails(auditId) {
+            alert(`Viewing audit details for ${auditId}...`);
+        }
+
+        function blockIP(ipAddress) {
+            if (confirm(`Block IP address ${ipAddress}?`)) {
+                alert(`IP address ${ipAddress} has been blocked.`);
+            }
+        }
+
+        function runSecurityScan() {
+            alert('Running security scan...');
+        }
+
+        function updateSecurityPolicies() {
+            alert('Opening security policy configuration...');
+        }
+
+        function generateSecurityReport() {
+            alert('Generating security report...');
+        }
+
+        function manageFirewall() {
+            alert('Opening firewall management...');
+        }
+
+        function reviewPermissions() {
+            alert('Opening permission review...');
+        }
+
+        function configureSSL() {
+            alert('Opening SSL configuration...');
+        }
+
+        // Configuration Functions
+        document.getElementById('systemConfigForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('System configuration saved successfully!');
+        });
+
+        document.getElementById('emailConfigForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Email configuration saved successfully!');
+        });
+
+        function resetToDefaults() {
+            if (confirm('Reset all settings to default values?')) {
+                alert('Settings reset to defaults.');
+            }
+        }
+
+        function testEmailConfig() {
+            alert('Testing email configuration...');
+        }
+
+        // Backup Functions
+        function createBackup() {
+            if (confirm('Create a full system backup? This may take several minutes.')) {
+                alert('Full backup started...');
+            }
+        }
+
+        function createIncrementalBackup() {
+            alert('Creating incremental backup...');
+        }
+
+        function scheduleBackup() {
+            alert('Opening backup scheduler...');
+        }
+
+        function restoreBackup(backupId) {
+            if (confirm(`Restore from backup ${backupId}? This will overwrite current data.`)) {
+                alert(`Restoring from backup ${backupId}...`);
+            }
+        }
+
+        function downloadBackup(backupId) {
+            alert(`Downloading backup ${backupId}...`);
+        }
+
+        // Report Functions
+        document.getElementById('systemReportForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const reportData = {
+                type: formData.get('reportType'),
+                startDate: formData.get('startDate'),
+                endDate: formData.get('endDate'),
+                generatedBy: auth.getCurrentUser().username,
+                generatedAt: new Date().toISOString()
+            };
+            
+            console.log('Generating system report:', reportData);
+            alert('System report generation started. You will receive an email when ready.');
+        });
+
+        function scheduleReport() {
+            alert('Opening report scheduler...');
+        }
+    </script>
+</body>
+</html>

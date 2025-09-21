@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal Aid Dashboard - Uganda Land Management System</title>
+    <link rel="stylesheet" href="../styles/main.css">
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2 style="color: var(--primary); font-family: 'Montserrat', sans-serif; font-weight: 900;">Land Management</h2>
+            <p style="font-size: 0.875rem; color: var(--muted-foreground);" id="user-info">Loading...</p>
+        </div>
+        
+        <ul class="sidebar-nav">
+            <li><a href="legal_aid.html">Dashboard</a></li>
+            <li><a href="#" onclick="showSection('active-cases')">Active Cases</a></li>
+            <li><a href="#" onclick="showSection('client-intake')">Client Intake</a></li>
+            <li><a href="#" onclick="showSection('case-management')">Case Management</a></li>
+            <li><a href="#" onclick="showSection('legal-resources')">Legal Resources</a></li>
+            <li><a href="#" onclick="showSection('referrals')">Referral Network</a></li>
+            <li><a href="#" onclick="showSection('reports')">Case Reports</a></li>
+            <li><a href="#" onclick="logout()" style="color: var(--destructive);">Logout</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Dashboard Overview Section -->
+        <div id="dashboard-section">
+            <div class="flex justify-between items-center mb-4">
+                <h1>Legal Aid Provider Dashboard</h1>
+                <div class="flex gap-4">
+                    <button class="btn btn-primary" onclick="showSection('client-intake')">New Client Intake</button>
+                    <button class="btn btn-secondary" onclick="showSection('active-cases')">View Active Cases</button>
+                </div>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="active-cases-count">28</div>
+                    <div class="stat-label">Active Cases</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="new-clients-count">12</div>
+                    <div class="stat-label">New Clients This Month</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="resolved-cases-count">45</div>
+                    <div class="stat-label">Cases Resolved</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="success-rate">78%</div>
+                    <div class="stat-label">Success Rate</div>
+                </div>
+            </div>
+
+            <!-- Urgent Cases -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Urgent Cases Requiring Immediate Attention</h3>
+                </div>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Case ID</th>
+                                <th>Client Name</th>
+                                <th>Case Type</th>
+                                <th>Location</th>
+                                <th>Urgency</th>
+                                <th>Next Action</th>
+                                <th>Deadline</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>LA-2024-001</td>
+                                <td>Sarah Nambi</td>
+                                <td>Forced Eviction</td>
+                                <td>Kampala District</td>
+                                <td><span class="badge badge-danger">Critical</span></td>
+                                <td>Court Filing</td>
+                                <td>2024-01-20</td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="openCase('LA-2024-001')">Open Case</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>LA-2024-003</td>
+                                <td>James Okello</td>
+                                <td>Land Grabbing</td>
+                                <td>Gulu District</td>
+                                <td><span class="badge badge-warning">High</span></td>
+                                <td>Evidence Collection</td>
+                                <td>2024-01-22</td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="openCase('LA-2024-003')">Open Case</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>LA-2024-005</td>
+                                <td>Mary Nakato</td>
+                                <td>Inheritance Dispute</td>
+                                <td>Wakiso District</td>
+                                <td><span class="badge badge-warning">High</span></td>
+                                <td>Family Mediation</td>
+                                <td>2024-01-25</td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="openCase('LA-2024-005')">Open Case</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Recent Case Activity</h3>
+                </div>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Activity</th>
+                                <th>Case</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>11:30 AM</td>
+                                <td>Court hearing scheduled</td>
+                                <td>LA-2024-001 - Sarah Nambi</td>
+                                <td><span class="badge badge-info">Scheduled</span></td>
+                            </tr>
+                            <tr>
+                                <td>10:15 AM</td>
+                                <td>Evidence documents submitted</td>
+                                <td>LA-2024-003 - James Okello</td>
+                                <td><span class="badge badge-success">Submitted</span></td>
+                            </tr>
+                            <tr>
+                                <td>09:45 AM</td>
+                                <td>Client consultation completed</td>
+                                <td>LA-2024-007 - Peter Ssali</td>
+                                <td><span class="badge badge-success">Completed</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Active Cases Section -->
+        <div id="active-cases-section" class="hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h1>Active Legal Cases</h1>
+                <div class="flex gap-4">
+                    <select id="caseFilter" class="form-select" style="width: auto;" onchange="filterCases()">
+                        <option value="all">All Cases</option>
+                        <option value="land_grabbing">Land Grabbing</option>
+                        <option value="forced_eviction">Forced Eviction</option>
+                        <option value="inheritance_dispute">Inheritance Disputes</option>
+                        <option value="boundary_dispute">Boundary Disputes</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="exportCases()">Export Cases</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Case ID</th>
+                                <th>Client</th>
+                                <th>Case Type</th>
+                                <th>Location</th>
+                                <th>Date Opened</th>
+                                <th>Status</th>
+                                <th>Next Hearing</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cases-table">
+                            <tr>
+                                <td>LA-2024-001</td>
+                                <td>Sarah Nambi</td>
+                                <td>Forced Eviction</td>
+                                <td>Kampala District</td>
+                                <td>2024-01-15</td>
+                                <td><span class="badge badge-warning">In Progress</span></td>
+                                <td>2024-01-25</td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="openCase('LA-2024-001')">Manage</button>
+                                    <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="scheduleHearing('LA-2024-001')">Schedule</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>LA-2024-002</td>
+                                <td>John Mukasa</td>
+                                <td>Land Grabbing</td>
+                                <td>Wakiso District</td>
+                                <td>2024-01-12</td>
+                                <td><span class="badge badge-info">Evidence Collection</span></td>
+                                <td>2024-01-30</td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="openCase('LA-2024-002')">Manage</button>
+                                    <button class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="addEvidence('LA-2024-002')">Add Evidence</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Client Intake Section -->
+        <div id="client-intake-section" class="hidden">
+            <h1>New Client Intake</h1>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Client Information Form</h3>
+                </div>
+                
+                <form id="clientIntakeForm">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label for="clientFirstName" class="form-label">First Name</label>
+                            <input type="text" id="clientFirstName" name="clientFirstName" class="form-input" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="clientLastName" class="form-label">Last Name</label>
+                            <input type="text" id="clientLastName" name="clientLastName" class="form-input" required>
+                        </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label for="clientPhone" class="form-label">Phone Number</label>
+                            <input type="tel" id="clientPhone" name="clientPhone" class="form-input" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="clientEmail" class="form-label">Email (Optional)</label>
+                            <input type="email" id="clientEmail" name="clientEmail" class="form-input">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="clientAddress" class="form-label">Address</label>
+                        <textarea id="clientAddress" name="clientAddress" class="form-input" rows="2" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="caseType" class="form-label">Case Type</label>
+                        <select id="caseType" name="caseType" class="form-select" required>
+                            <option value="">Select Case Type</option>
+                            <option value="land_grabbing">Land Grabbing</option>
+                            <option value="forced_eviction">Forced Eviction</option>
+                            <option value="inheritance_dispute">Inheritance Dispute</option>
+                            <option value="boundary_dispute">Boundary Dispute</option>
+                            <option value="title_dispute">Title Dispute</option>
+                            <option value="family_wrangle">Family Land Wrangle</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="caseDescription" class="form-label">Case Description</label>
+                        <textarea id="caseDescription" name="caseDescription" class="form-input" rows="5" required 
+                                  placeholder="Please provide detailed description of the legal issue..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="urgencyLevel" class="form-label">Urgency Level</label>
+                        <select id="urgencyLevel" name="urgencyLevel" class="form-select" required>
+                            <option value="">Select Urgency</option>
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                            <option value="critical">Critical</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="financialStatus" class="form-label">Client Financial Status</label>
+                        <select id="financialStatus" name="financialStatus" class="form-select" required>
+                            <option value="">Select Financial Status</option>
+                            <option value="indigent">Indigent (Free Legal Aid)</option>
+                            <option value="low_income">Low Income (Subsidized)</option>
+                            <option value="moderate_income">Moderate Income (Partial Fee)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="flex gap-4">
+                        <button type="submit" class="btn btn-primary">Create Case</button>
+                        <button type="button" class="btn btn-secondary" onclick="showSection('dashboard')">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Case Management Section -->
+        <div id="case-management-section" class="hidden">
+            <h1>Case Management Tools</h1>
+            
+            <div class="dashboard-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Case Timeline Template</h3>
+                    </div>
+                    <div style="padding: 1rem;">
+                        <div style="margin-bottom: 1rem; padding: 0.5rem; border-left: 4px solid var(--primary);">
+                            <strong>Initial Consultation</strong><br>
+                            <small>Client intake and case assessment</small>
+                        </div>
+                        <div style="margin-bottom: 1rem; padding: 0.5rem; border-left: 4px solid var(--secondary);">
+                            <strong>Evidence Collection</strong><br>
+                            <small>Gather documents and witness statements</small>
+                        </div>
+                        <div style="margin-bottom: 1rem; padding: 0.5rem; border-left: 4px solid var(--chart-3);">
+                            <strong>Legal Research</strong><br>
+                            <small>Research applicable laws and precedents</small>
+                        </div>
+                        <div style="margin-bottom: 1rem; padding: 0.5rem; border-left: 4px solid var(--chart-4);">
+                            <strong>Court Filing</strong><br>
+                            <small>Prepare and submit legal documents</small>
+                        </div>
+                        <div style="padding: 0.5rem; border-left: 4px solid var(--chart-5);">
+                            <strong>Resolution</strong><br>
+                            <small>Court hearing and case resolution</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Document Templates</h3>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 1rem; padding: 1rem;">
+                        <button class="btn btn-secondary" onclick="downloadTemplate('petition')">Land Dispute Petition</button>
+                        <button class="btn btn-secondary" onclick="downloadTemplate('injunction')">Injunction Application</button>
+                        <button class="btn btn-secondary" onclick="downloadTemplate('evidence')">Evidence Affidavit</button>
+                        <button class="btn btn-secondary" onclick="downloadTemplate('settlement')">Settlement Agreement</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Case Progress Tracker</h3>
+                </div>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Case ID</th>
+                                <th>Client</th>
+                                <th>Current Stage</th>
+                                <th>Progress</th>
+                                <th>Next Milestone</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>LA-2024-001</td>
+                                <td>Sarah Nambi</td>
+                                <td>Court Filing</td>
+                                <td>
+                                    <div style="background-color: var(--muted); height: 8px; border-radius: 4px;">
+                                        <div style="background-color: var(--primary); height: 100%; width: 60%; border-radius: 4px;"></div>
+                                    </div>
+                                    <small>60% Complete</small>
+                                </td>
+                                <td>Court Hearing</td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="updateProgress('LA-2024-001')">Update</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Legal Resources Section -->
+        <div id="legal-resources-section" class="hidden">
+            <h1>Legal Resources & Research</h1>
+            
+            <div class="dashboard-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Uganda Land Laws</h3>
+                    </div>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border);">
+                            <a href="#" style="color: var(--primary); text-decoration: none;">Constitution of Uganda (1995) - Chapter 15</a>
+                        </li>
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border);">
+                            <a href="#" style="color: var(--primary); text-decoration: none;">Land Act (1998) - Cap 227</a>
+                        </li>
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border);">
+                            <a href="#" style="color: var(--primary); text-decoration: none;">Registration of Titles Act - Cap 230</a>
+                        </li>
+                        <li style="padding: 0.5rem 0;">
+                            <a href="#" style="color: var(--primary); text-decoration: none;">Land Acquisition Act - Cap 226</a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Case Precedents</h3>
+                    </div>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border);">
+                            <strong>Bukenya vs. Mukasa (2019)</strong><br>
+                            <small>Customary land rights recognition</small>
+                        </li>
+                        <li style="padding: 0.5rem 0; border-bottom: 1px solid var(--border);">
+                            <strong>Namuli vs. District Land Board (2020)</strong><br>
+                            <small>CCO application procedures</small>
+                        </li>
+                        <li style="padding: 0.5rem 0;">
+                            <strong>Okello vs. Uganda Land Commission (2021)</strong><br>
+                            <small>Land grabbing compensation</small>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Referrals Section -->
+        <div id="referrals-section" class="hidden">
+            <h1>Referral Network</h1>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Legal Aid Network Partners</h3>
+                </div>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Organization</th>
+                                <th>Specialization</th>
+                                <th>Location</th>
+                                <th>Contact</th>
+                                <th>Capacity</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Uganda Law Society</td>
+                                <td>General Legal Aid</td>
+                                <td>Kampala</td>
+                                <td>+256-414-250-077</td>
+                                <td><span class="badge badge-success">Available</span></td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="makeReferral('ULS')">Refer Client</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Justice Law Chambers</td>
+                                <td>Land Rights</td>
+                                <td>Kampala</td>
+                                <td>+256-414-256-789</td>
+                                <td><span class="badge badge-warning">Limited</span></td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="makeReferral('JLC')">Refer Client</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Northern Uganda Legal Aid</td>
+                                <td>Post-Conflict Land Issues</td>
+                                <td>Gulu</td>
+                                <td>+256-471-432-567</td>
+                                <td><span class="badge badge-success">Available</span></td>
+                                <td>
+                                    <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;" onclick="makeReferral('NULA')">Refer Client</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reports Section -->
+        <div id="reports-section" class="hidden">
+            <h1>Case Reports & Analytics</h1>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Generate Case Report</h3>
+                </div>
+                
+                <form id="reportForm">
+                    <div class="form-group">
+                        <label for="reportType" class="form-label">Report Type</label>
+                        <select id="reportType" name="reportType" class="form-select" required>
+                            <option value="">Select Report Type</option>
+                            <option value="case_summary">Case Summary Report</option>
+                            <option value="client_statistics">Client Statistics</option>
+                            <option value="success_rate">Success Rate Analysis</option>
+                            <option value="monthly_activity">Monthly Activity Report</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="dateRange" class="form-label">Date Range</label>
+                        <div class="flex gap-4">
+                            <input type="date" id="startDate" name="startDate" class="form-input" required>
+                            <input type="date" id="endDate" name="endDate" class="form-input" required>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-4">
+                        <button type="submit" class="btn btn-primary">Generate Report</button>
+                        <button type="button" class="btn btn-secondary" onclick="exportToCSV()">Export to CSV</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/auth.js"></script>
+    <script>
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeDashboard();
+            showSection('dashboard');
+        });
+
+        // Section navigation
+        function showSection(sectionName) {
+            const sections = document.querySelectorAll('[id$="-section"]');
+            sections.forEach(section => section.classList.add('hidden'));
+            
+            const targetSection = document.getElementById(sectionName + '-section');
+            if (targetSection) {
+                targetSection.classList.remove('hidden');
+            }
+            
+            const navLinks = document.querySelectorAll('.sidebar-nav a');
+            navLinks.forEach(link => link.classList.remove('active'));
+            
+            const activeLink = document.querySelector(`[onclick="showSection('${sectionName}')"]`);
+            if (activeLink) {
+                activeLink.classList.add('active');
+            }
+        }
+
+        // Case management functions
+        function openCase(caseId) {
+            alert(`Opening detailed case management for ${caseId}...`);
+        }
+
+        function scheduleHearing(caseId) {
+            const date = prompt('Enter hearing date (YYYY-MM-DD):');
+            if (date) {
+                alert(`Hearing scheduled for case ${caseId} on ${date}`);
+            }
+        }
+
+        function addEvidence(caseId) {
+            alert(`Opening evidence management for case ${caseId}...`);
+        }
+
+        function updateProgress(caseId) {
+            alert(`Updating progress for case ${caseId}...`);
+        }
+
+        // Client intake form
+        document.getElementById('clientIntakeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const clientData = {
+                firstName: formData.get('clientFirstName'),
+                lastName: formData.get('clientLastName'),
+                phone: formData.get('clientPhone'),
+                email: formData.get('clientEmail'),
+                address: formData.get('clientAddress'),
+                caseType: formData.get('caseType'),
+                description: formData.get('caseDescription'),
+                urgency: formData.get('urgencyLevel'),
+                financialStatus: formData.get('financialStatus'),
+                intakeDate: new Date().toISOString().split('T')[0],
+                intakeOfficer: auth.getCurrentUser().username
+            };
+            
+            console.log('New client intake:', clientData);
+            alert('Client case created successfully! Case ID: LA-2024-' + Math.floor(Math.random() * 1000));
+            this.reset();
+            showSection('dashboard');
+        });
+
+        // Utility functions
+        function filterCases() {
+            const filter = document.getElementById('caseFilter').value;
+            console.log('Filtering cases by:', filter);
+        }
+
+        function exportCases() {
+            alert('Exporting case data to CSV...');
+        }
+
+        function downloadTemplate(templateType) {
+            alert(`Downloading ${templateType} template...`);
+        }
+
+        function makeReferral(organization) {
+            alert(`Making referral to ${organization}...`);
+        }
+
+        function exportToCSV() {
+            alert('Exporting report to CSV...');
+        }
+
+        // Report generation
+        document.getElementById('reportForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const reportData = {
+                type: formData.get('reportType'),
+                startDate: formData.get('startDate'),
+                endDate: formData.get('endDate'),
+                generatedBy: auth.getCurrentUser().username,
+                generatedAt: new Date().toISOString()
+            };
+            
+            console.log('Generating report:', reportData);
+            alert('Report generation started. You will receive an email when it\'s ready.');
+        });
+    </script>
+</body>
+</html>

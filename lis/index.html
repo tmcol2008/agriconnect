@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uganda Land Management System - Login</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <h1 class="login-title">Land Management</h1>
+                <p class="login-subtitle">Uganda Land Tenure & Dispute Tracking System</p>
+            </div>
+            
+            <div id="alert-container"></div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username" class="form-label">Username or Email</label>
+                    <input type="text" id="username" name="username" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" id="password" name="password" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="userType" class="form-label">User Type</label>
+                    <select id="userType" name="userType" class="form-select" required>
+                        <option value="">Select User Type</option>
+                        <option value="citizen">Citizen</option>
+                        <option value="government_official">Government Official</option>
+                        <option value="legal_aid">Legal Aid Provider</option>
+                        <option value="researcher">Researcher</option>
+                        <option value="admin">Administrator</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+                    Sign In
+                </button>
+            </form>
+            
+            <div class="text-center mt-4">
+                <p style="font-size: 0.875rem; color: var(--muted-foreground);">
+                    Need help? Contact your system administrator
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script>
+        // Initialize login form
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                const userType = document.getElementById('userType').value;
+                
+                // Simulate authentication
+                if (username && password && userType) {
+                    // Store user session
+                    const user = {
+                        username: username,
+                        userType: userType,
+                        loginTime: new Date().toISOString()
+                    };
+                    
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+                    
+                    // Redirect to appropriate dashboard
+                    window.location.href = `dashboards/${userType}.html`;
+                } else {
+                    showAlert('Please fill in all fields', 'error');
+                }
+            });
+        });
+        
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alert-container');
+            alertContainer.innerHTML = `
+                <div class="alert alert-${type}">
+                    ${message}
+                </div>
+            `;
+            
+            setTimeout(() => {
+                alertContainer.innerHTML = '';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
